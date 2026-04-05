@@ -187,41 +187,76 @@ const BlockchainVisualization = () => {
 
             {/* Modal Popover for Hashes */}
             {selectedBlock && (
-                <div className="fixed inset-0 bg-gray-900/60 dark:bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 transition-opacity" onClick={() => setSelectedBlock(null)}>
-                    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-100 dark:border-gray-800 overflow-hidden transform scale-100 transition-transform" onClick={e => e.stopPropagation()}>
-
-                        <div className="bg-indigo-600 p-6 flex justify-between items-center text-white">
-                            <div className="flex items-center gap-4">
-                                <Key className="w-8 h-8" />
+                <div 
+                    className="fixed inset-0 bg-gray-900/40 dark:bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-all duration-300 animate-in fade-in"
+                    onClick={() => setSelectedBlock(null)}
+                >
+                    <div 
+                        className="bg-white dark:bg-gray-900 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] max-w-lg w-full border border-gray-100 dark:border-gray-800 overflow-hidden transform transition-all duration-500 animate-in zoom-in-95 slide-in-from-bottom-4"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Popup Header */}
+                        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 p-8 text-white relative">
+                            <div className="flex items-center gap-5">
+                                <div className="p-3 bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-inner">
+                                    <Key className="w-8 h-8" />
+                                </div>
                                 <div>
-                                    <h3 className="text-xl font-bold tracking-tight uppercase">Block #{selectedBlock.blockNumber} Hashes</h3>
-                                    <p className="text-indigo-200 text-xs font-medium uppercase tracking-widest">Immutable Network signatures</p>
+                                    <h3 className="text-2xl font-black tracking-tight uppercase">Block #{selectedBlock.blockNumber}</h3>
+                                    <p className="text-indigo-100 text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">Cryptographic Seal</p>
                                 </div>
                             </div>
-                            <button onClick={() => setSelectedBlock(null)} className="text-indigo-100 hover:text-white transition-all">
-                                <SearchX className="w-6 h-6" />
-                            </button>
                         </div>
 
+                        {/* Popup Content */}
                         <div className="p-8 space-y-6">
-                            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl border border-gray-200 dark:border-gray-800">
-                                <p className="text-xs text-gray-500 dark:text-gray-400 uppercase font-bold tracking-widest mb-2">Previous Block Hash</p>
-                                <div className="font-mono text-xs p-3 rounded-lg bg-white dark:bg-black border border-gray-100 dark:border-gray-800 text-gray-600 dark:text-gray-400 break-all">
-                                    {selectedBlock.previousBlockHash}
+                            {/* Hashes Section */}
+                            <div className="space-y-4">
+                                <div className="group transition-all">
+                                    <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase font-black tracking-widest mb-2 ml-1">Previous Block Link</p>
+                                    <div className="font-mono text-[11px] p-3.5 rounded-xl bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 text-gray-500 dark:text-gray-400 break-all leading-relaxed group-hover:border-indigo-500/30 transition-colors">
+                                        {selectedBlock.previousBlockHash}
+                                    </div>
+                                </div>
+
+                                <div className="group transition-all">
+                                    <p className="text-[10px] text-indigo-500 uppercase font-black tracking-widest mb-2 ml-1">Current State Hash</p>
+                                    <div className="font-mono text-[11px] p-3.5 rounded-xl bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 font-bold break-all leading-relaxed group-hover:bg-indigo-50 transition-colors">
+                                        {selectedBlock.blockHash}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
-                                <p className="text-xs text-indigo-600 dark:text-indigo-400 uppercase font-bold tracking-widest mb-2">Current Block Hash</p>
-                                <div className="font-mono text-xs p-3 rounded-lg bg-white dark:bg-black border border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-300 font-bold break-all">
-                                    {selectedBlock.blockHash}
+                            {/* Transaction Summary Section */}
+                            {selectedBlock.transactions?.length > 0 && (
+                                <div className="pt-2">
+                                    <p className="text-[10px] text-gray-400 uppercase font-black tracking-widest mb-3 ml-1 flex items-center">
+                                        <Activity className="w-3 h-3 mr-2" /> Registered Transactions
+                                    </p>
+                                    <div className="space-y-2 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                                        {selectedBlock.transactions.map((tx, idx) => (
+                                            <div key={idx} className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${tx.action === 'CREATE' ? 'bg-emerald-500' : 'bg-blue-500'}`}></span>
+                                                    <span className="text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase">{tx.action}</span>
+                                                </div>
+                                                <span className="text-[10px] text-gray-400 font-mono">
+                                                    {tx.txHash?.substring(0, 10)}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
-                        <div className="px-8 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-end">
-                            <button onClick={() => setSelectedBlock(null)} className="px-6 py-2 bg-gray-800 text-white font-bold rounded-xl text-sm uppercase tracking-widest">
-                                Close
+                        {/* Popup Footer */}
+                        <div className="px-8 py-4 bg-gray-50/50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-800 flex justify-center">
+                            <button 
+                                onClick={() => setSelectedBlock(null)} 
+                                className="px-12 py-3 bg-gray-900 dark:bg-indigo-600 text-white font-black rounded-xl text-xs uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-indigo-700 transition-all shadow-lg active:scale-95"
+                            >
+                                Acknowledge
                             </button>
                         </div>
                     </div>

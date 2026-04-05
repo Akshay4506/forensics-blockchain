@@ -107,11 +107,10 @@ const Layout = () => {
                         <button
                             onClick={connectWallet}
                             disabled={isConnecting}
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                                account 
-                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50' 
-                                : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/20'
-                            }`}
+                            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${account
+                                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50'
+                                    : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/20'
+                                }`}
                         >
                             <Wallet className="w-4 h-4" />
                             <span>
@@ -145,7 +144,7 @@ const Layout = () => {
                                 </div>
                             </button>
 
-                             {/* Dropdown Menu */}
+                            {/* Dropdown Menu */}
                             {dropdownOpen && (
                                 <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-[#0f172a] rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden z-50">
                                     {/* Notifications Section */}
@@ -160,7 +159,7 @@ const Layout = () => {
                                                     <span className="flex items-center justify-center w-5 h-5 bg-green-500 text-[10px] text-white font-bold rounded-full">
                                                         {notifications.length}
                                                     </span>
-                                                    <button 
+                                                    <button
                                                         onClick={(e) => { e.stopPropagation(); clearAllNotifications(); }}
                                                         className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 uppercase tracking-wider"
                                                     >
@@ -178,7 +177,7 @@ const Layout = () => {
                                             </div>
                                         ) : (
                                             notifications.map((notif) => (
-                                                <div 
+                                                <div
                                                     key={notif._id}
                                                     onClick={async () => {
                                                         await markNotificationAsRead(notif._id);
