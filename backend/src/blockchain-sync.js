@@ -14,14 +14,11 @@ const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8546");
 const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
 
 export const reconcileBlockchain = async () => {
-    console.log("🔍 Checking Blockchain-DB synchronization...");
-    
     try {
         const filter = contract.filters.EvidenceMinted();
         const events = await contract.queryFilter(filter);
         
-        console.log(`📡 Found ${events.length} on-chain records.`);
-
+        let reconciledCount = 0;
         for (const event of events) {
             const { tokenId, title, fileHash, creator } = event.args;
             const tid = Number(tokenId);
@@ -30,9 +27,10 @@ export const reconcileBlockchain = async () => {
             const existing = await Evidence.findOne({ "blockchainInfo.tokenId": tid });
             
             // --- RECONCILIATION VIA CENTRALIZED COMMIT SERVICE ---
-            const blockExists = await (await import('./src/models/Block.js')).default.findOne({ blockHash: event.transactionHash });
+            const blockExists = await (await import('./models/Block.js')).default.findOne({ blockHash: event.transactionHash });
             
             if (!existing || !blockExists) {
+                reconciledCount++;
                 console.warn(`⚖️  Rebuilding ledger data for Token ID: ${tid}...`);
                 
                 const user = await User.findOne({ organization: 'ECU' });
@@ -57,7 +55,7 @@ export const reconcileBlockchain = async () => {
                     }
                 };
 
-                const lastBlock = await (await import('./src/models/Block.js')).default.findOne().sort({ blockNumber: -1 });
+                const lastBlock = await (await import('./models/Block.js')).default.findOne().sort({ blockNumber: -1 });
                 const newBlockNumber = lastBlock ? lastBlock.blockNumber + 1 : 1;
                 const prevHash = lastBlock ? lastBlock.blockHash : "0".repeat(64);
 
@@ -73,7 +71,11 @@ export const reconcileBlockchain = async () => {
             }
         }
         
-        console.log("🏁 Reconciliation complete.");
+        if (reconciledCount > 0) {
+            console.log(`🏁 Reconciliation complete. Total recovered: ${reconciledCount}`);
+        } else if (events.length > 0) {
+            console.log("✅ Blockchain-DB integrity verified. System synchronized.");
+        }
     } catch (error) {
         console.error("❌ Reconciliation failed:", error.message);
     }
