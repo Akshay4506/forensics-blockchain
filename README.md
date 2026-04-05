@@ -38,11 +38,10 @@ The platform enforces a mandatory transfer path to ensure legal integrity:
     cd frontend
     npm run dev
     ```
-
----
-**Confidential Forensic Property** | *Built for Forensic Integrity and Immutable Truth.* ⚖️
-
 ---
 ## 📄 License
 
 This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.
+
+---
+**Confidential Forensic Property** | *Built for Forensic Integrity and Immutable Truth.* ⚖️
