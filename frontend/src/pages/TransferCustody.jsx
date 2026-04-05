@@ -37,7 +37,7 @@ const TransferCustody = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!account) return setError('Please connect your MetaMask wallet first.');
-        
+
         const selectedEv = evidenceList.find(ev => ev._id === evidenceId);
         if (!selectedEv?.blockchainInfo?.tokenId) {
             return setError('This evidence is not registered on the blockchain.');
@@ -60,7 +60,7 @@ const TransferCustody = () => {
                     throw new Error('Forensic Protocol Violation: ECU cannot transfer directly to COURT. Route through LAB.');
                 }
             }
-            
+
             if (senderOrg === 'LAB') {
                 if (recipientOrg !== 'ECU' && recipientOrg !== 'COURT') {
                     throw new Error('Forensic Protocol Violation: LAB can only release to ECU or COURT.');
@@ -100,12 +100,19 @@ const TransferCustody = () => {
             setSuccess('Transfer successful. Ownership updated on ledger.');
             setEvidenceId('');
             setNewOwnerEmail('');
-            
+
             const res = await api.get('/evidence');
             setEvidenceList(res.data.filter(ev => ev.ownerOrg === currentUser?.organization));
 
         } catch (err) {
-            setError(err.response?.data?.message || err.message || 'Transfer failed.');
+            console.error("Transfer Error:", err);
+
+            // Professional MetaMask Interceptor
+            if (err.code === 'ACTION_REJECTED' || (err.info?.error?.code === 4001)) {
+                setError('Custody transfer rejected by the current custodian.');
+            } else {
+                setError(err.response?.data?.message || err.message || 'Transfer failed.');
+            }
         } finally {
             setLoading(false);
         }
@@ -159,12 +166,12 @@ const TransferCustody = () => {
                 <div>
                     <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Recipient Email</label>
                     <input
-                        type="email" 
-                        required 
+                        type="email"
+                        required
                         disabled={!evidenceId}
                         placeholder="custodian@forensic.gov"
                         className={`w-full p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:bg-white dark:focus:bg-gray-800 focus:ring-2 focus:ring-indigo-500 text-gray-900 dark:text-white outline-none transition-all ${!evidenceId ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        value={newOwnerEmail} 
+                        value={newOwnerEmail}
                         onChange={e => setNewOwnerEmail(e.target.value)}
                     />
                 </div>

@@ -44,7 +44,7 @@ export const getEvidenceById = async (req, res) => {
                 evidenceId: evidence._id,
                 $or: [{ fromOrg: req.user.organization }, { toOrg: req.user.organization }]
             });
-            
+
             if (!wasInvolved) {
                 return res.status(403).json({ message: 'Access denied: You do not have permission to view this forensic asset.' });
             }
@@ -85,10 +85,10 @@ export const syncMintedEvidence = async (req, res) => {
             return res.status(403).json({ message: 'Forensic Protocol Violation: Only the ECU organization can mint new evidence.' });
         }
 
-        const { 
-            title, caseName, description, fileHash, 
+        const {
+            title, caseName, description, fileHash,
             fileName, fileOriginalName, fileSize, mimeType,
-            tokenId, transactionHash, ownerAddress 
+            tokenId, transactionHash, ownerAddress
         } = req.body;
 
         const tx = {
@@ -121,7 +121,7 @@ export const syncMintedEvidence = async (req, res) => {
         };
 
         await commitTransactions([tx], blockData);
-        
+
         // Find the newly created evidence to return
         const evidence = await Evidence.findOne({ "blockchainInfo.tokenId": tokenId });
         res.status(201).json(evidence);
@@ -134,12 +134,12 @@ export const syncMintedEvidence = async (req, res) => {
 export const purgeNonECUEvidence = async (req, res) => {
     try {
         if (req.user.role !== 'ADMIN') return res.status(403).json({ message: 'Admin role required' });
-        
+
         // This is a powerful command: use with caution
         await Evidence.deleteMany({ creatorOrg: { $ne: 'ECU' } });
         // We'll leave blocks intact for now to prevent breaking the chain hash links, 
         // but they will be hidden from the ledger by the controller logic.
-        
+
         res.json({ message: 'Non-ECU evidence successfully purged from storage.' });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -149,7 +149,7 @@ export const purgeNonECUEvidence = async (req, res) => {
 export const syncTransferredEvidence = async (req, res) => {
     try {
         const { evidenceId, newOwnerId, newOwnerOrg, newOwnerAddress, transactionHash } = req.body;
-        
+
         // --- FORENSIC PROTOCOL VALIDATION ---
         const senderOrg = req.user.organization;
         if (senderOrg === 'ECU' && newOwnerOrg === 'COURT') {

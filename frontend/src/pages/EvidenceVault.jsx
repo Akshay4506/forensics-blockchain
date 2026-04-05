@@ -86,8 +86,8 @@ const EvidenceVault = () => {
                             <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white">{evidence.title}</h1>
                         </div>
                         <div className="text-right">
-                             <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Blockchain ID</p>
-                             <p className="font-mono text-xs text-gray-500 dark:text-gray-400 font-bold">{evidence._id.substring(0, 16)}...</p>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Blockchain ID</p>
+                            <p className="font-mono text-xs text-gray-500 dark:text-gray-400 font-bold">{evidence._id.substring(0, 16)}...</p>
                         </div>
                     </div>
                 </div>
@@ -127,49 +127,45 @@ const EvidenceVault = () => {
                     </div>
 
                     <div className="flex flex-col justify-center">
-                        <div className={`p-8 rounded-3xl border-2 transition-all duration-500 flex flex-col items-center text-center space-y-6 ${
-                            verificationStatus === 'success' ? 'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800/50' : 
-                            verificationStatus === 'fail' ? 'bg-red-50/50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50' :
-                            'bg-blue-50/30 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30 border-dashed'
-                        }`}>
-                            <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500 ${
-                                verifying ? 'animate-spin' : ''
-                            } ${
-                                verificationStatus === 'success' ? 'bg-emerald-500 text-white group-hover:scale-110' :
-                                verificationStatus === 'fail' ? 'bg-red-500 text-white shimmer' :
-                                'bg-blue-600 text-white'
+                        <div className={`p-8 rounded-3xl border-2 transition-all duration-500 flex flex-col items-center text-center space-y-6 ${verificationStatus === 'success' ? 'bg-emerald-50/50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800/50' :
+                                verificationStatus === 'fail' ? 'bg-red-50/50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50' :
+                                    'bg-blue-50/30 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30 border-dashed'
                             }`}>
-                                {verificationStatus === 'success' ? <ShieldCheck className="w-10 h-10" /> : 
-                                 verificationStatus === 'fail' ? <ShieldX className="w-10 h-10" /> :
-                                 <Lock className="w-10 h-10" />}
+                            <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500 ${verifying ? 'animate-spin' : ''
+                                } ${verificationStatus === 'success' ? 'bg-emerald-500 text-white group-hover:scale-110' :
+                                    verificationStatus === 'fail' ? 'bg-red-500 text-white shimmer' :
+                                        'bg-blue-600 text-white'
+                                }`}>
+                                {verificationStatus === 'success' ? <ShieldCheck className="w-10 h-10" /> :
+                                    verificationStatus === 'fail' ? <ShieldX className="w-10 h-10" /> :
+                                        <Lock className="w-10 h-10" />}
                             </div>
 
                             <div>
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                    {verificationStatus === 'success' ? 'Integrity Verified' : 
-                                     verificationStatus === 'fail' ? 'Integrity Breach Detected' : 
-                                     'Secure Evidence Vault'}
+                                    {verificationStatus === 'success' ? 'Integrity Verified' :
+                                        verificationStatus === 'fail' ? 'Integrity Breach Detected' :
+                                            'Secure Evidence Vault'}
                                 </h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 px-4">
-                                    {verificationStatus === 'success' ? 'Mathematical hash match found on the channel ledger. Document is genuine.' : 
-                                     verificationStatus === 'fail' ? 'ALERT: The document in the vault does not match the ledger hash! It has been tampered with.' : 
-                                     'Click below to verify the mathematical fingerprint against the ledger before unlocking.'}
+                                    {verificationStatus === 'success' ? 'Mathematical hash match found on the channel ledger. Document is genuine.' :
+                                        verificationStatus === 'fail' ? 'ALERT: The document in the vault does not match the ledger hash! It has been tampered with.' :
+                                            'Click below to verify the mathematical fingerprint against the ledger before unlocking.'}
                                 </p>
                             </div>
 
                             <button
                                 onClick={handleSecureView}
                                 disabled={verifying}
-                                className={`w-full py-4 px-6 rounded-2xl font-bold flex items-center justify-center transition-all shadow-md group ${
-                                    verificationStatus === 'success' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 
-                                    verificationStatus === 'fail' ? 'bg-red-600 hover:bg-red-700 text-white' :
-                                    'bg-blue-600 hover:bg-blue-700 text-white'
-                                }`}
+                                className={`w-full py-4 px-6 rounded-2xl font-bold flex items-center justify-center transition-all shadow-md group ${verificationStatus === 'success' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' :
+                                        verificationStatus === 'fail' ? 'bg-red-600 hover:bg-red-700 text-white' :
+                                            'bg-blue-600 hover:bg-blue-700 text-white'
+                                    }`}
                             >
-                                {verifying ? 'Calculating Hash...' : 
-                                 verificationStatus === 'success' ? <><Download className="w-5 h-5 mr-3" /> Re-Download Document</> :
-                                 verificationStatus === 'fail' ? <><AlertCircle className="w-5 h-5 mr-3" /> Verify Again</> :
-                                 <><Shield className="w-5 h-5 mr-3 group-hover:animate-pulse" /> Unlock & Verify Document</>}
+                                {verifying ? 'Calculating Hash...' :
+                                    verificationStatus === 'success' ? <><Download className="w-5 h-5 mr-3" /> Re-Download Document</> :
+                                        verificationStatus === 'fail' ? <><AlertCircle className="w-5 h-5 mr-3" /> Verify Again</> :
+                                            <><Shield className="w-5 h-5 mr-3 group-hover:animate-pulse" /> Unlock & Verify Document</>}
                             </button>
 
                             <div className="w-full text-left space-y-2 mt-4 hidden md:block">

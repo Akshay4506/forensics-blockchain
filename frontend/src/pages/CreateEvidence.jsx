@@ -37,9 +37,9 @@ const CreateEvidence = () => {
         e.preventDefault();
         if (!account) return setError('Please connect your MetaMask wallet first.');
         if (!formData.fileHash) return setError('File hash missing. Please upload a file.');
-        
+
         setError('');
-        
+
         try {
             // STEP 1: Upload File to Vault
             setStatus('uploading');
@@ -53,9 +53,9 @@ const CreateEvidence = () => {
             const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
             const tx = await contract.mintEvidence(account, formData.title, formData.fileHash);
             setTxHash(tx.hash);
-            
+
             const receipt = await tx.wait();
-            
+
             // Extract TokenID from events
             const event = receipt.logs.find(log => {
                 try {
@@ -85,8 +85,15 @@ const CreateEvidence = () => {
             setTimeout(() => navigate('/dashboard'), 2000);
 
         } catch (err) {
-            console.error(err);
-            setError(err.response?.data?.message || err.message || 'Blockchain transaction failed');
+            console.error("Forensic Sync Error:", err);
+
+            // Professional MetaMask Interceptor
+            if (err.code === 'ACTION_REJECTED' || (err.info?.error?.code === 4001)) {
+                setError('Evidence registration rejected by the user.');
+            } else {
+                setError(err.response?.data?.message || err.message || 'Blockchain transaction failed');
+            }
+
             setStatus('idle');
         }
     };
@@ -106,7 +113,7 @@ const CreateEvidence = () => {
                         <AlertCircle className="w-3 h-3" /> System Policy: ECU-PRIMARY-MINT-ONLY
                     </div>
                 </div>
-                <button 
+                <button
                     onClick={() => navigate('/dashboard')}
                     className="mt-8 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-bold text-sm transition-colors"
                 >

@@ -52,7 +52,7 @@ export const commitTransactions = async (validTransactions, blockData) => {
                 const fromOrg = evidence.ownerOrg;
                 evidence.currentOwner = tx.payload.newOwnerId;
                 evidence.ownerOrg = tx.payload.newOwnerOrg;
-                
+
                 // Update blockchain info if it's a synced transfer
                 if (tx.blockchainInfo) {
                     evidence.blockchainInfo = {
@@ -60,7 +60,7 @@ export const commitTransactions = async (validTransactions, blockData) => {
                         ...tx.blockchainInfo
                     };
                 }
-                
+
                 await evidence.save();
 
                 // Get last custody log
