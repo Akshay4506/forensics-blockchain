@@ -39,6 +39,21 @@ The platform enforces a mandatory transfer path to ensure legal integrity:
     npm run dev
     ```
 ---
+## 🦊 MetaMask Setup
+To interact with the Forensic DApp, you must configure MetaMask to connect to the local Hardhat blockchain.
+
+1.  **Network Configuration**:
+    - **Network Name**: Localhost 8546 (or Forensic Node)
+    - **New RPC URL**: `http://127.0.0.1:8546`
+    - **Chain ID**: `31337` (Default Hardhat Chain ID)
+    - **Currency Symbol**: `ETH`
+
+2.  **Import Officer/Node Accounts**:
+    - When you start the Hardhat node (`npx hardhat node ...`), it will output 20 accounts with their Private Keys.
+    - Copy a Private Key from the terminal and import it into MetaMask (Account -> Import Account).
+    - Use this account to sign transactions on the platform.
+
+---
 ## 📄 License
 
 This project is licensed under the MIT - see the [LICENSE](LICENSE) file for details.
